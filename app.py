@@ -37,51 +37,40 @@ def run_code():
         return jsonify(err), 500
 
 @app.route('/status')
-def status(): return jsonify(last_status)
+def status():
+    return jsonify(last_status)
 
 @app.route('/log')
-def log(): return jsonify({"log": log_list})
+def log():
+    return jsonify({"log": log_list})
 
 @app.route('/ping')
-def ping(): return jsonify({"status": "ok", "message": "Runner is awake."})
+def ping():
+    return jsonify({"status": "ok", "message": "Runner is awake."})
 
-# ✅ Plugin: .well-known/ai-plugin.json
 @app.route('/.well-known/ai-plugin.json')
 def serve_ai_plugin():
-    return jsonify({
-        "schema_version": "v1",
-        "name_for_human": "LEAD ONE Python Runner",
-        "name_for_model": "lead_one_py_runner",
-        "description_for_human": "Execute secure Python code via API.",
-        "description_for_model": "Run base64 encoded Python code and retrieve results through the /run endpoint.",
-        "auth": { "type": "none" },
-        "api": {
-            "type": "openapi",
-            "url": "https://c3p-python-runner.onrender.com/openapi.json"
-        },
-        "logo_url": "https://c3p-python-runner.onrender.com/logo.png",
-        "contact_email": "cyhuango@gmail.com",
-        "legal_info_url": "https://c3p-python-runner.onrender.com/legal.html"
-    })
+    return send_file('ai-plugin.json', mimetype='application/json')
 
-# ✅ Plugin: openapi.yaml
 @app.route('/openapi.yaml')
 def serve_openapi():
-    with open('openapi.yaml', 'r', encoding='utf-8') as f:
-        return f.read(), 200, {'Content-Type': 'text/yaml'}
+    return send_file('openapi.yaml', mimetype='text/yaml')
 
-# ✅ Plugin: openapi.json
 @app.route('/openapi.json')
 def serve_openapi_json():
     return send_file('openapi.json', mimetype='application/json')
 
-# ✅ Plugin: legal.html
 @app.route('/legal.html')
 def serve_legal():
     return send_file('legal.html', mimetype='text/html')
 
+@app.route('/logo.png')
+def serve_logo():
+    return send_file('logo.png', mimetype='image/png')
+
 @app.route('/')
-def home(): return "🟢 Python Runner API Online. Use POST /run with base64 Python code."
+def home():
+    return "🟢 Python Runner API Online. Use POST /run with base64 Python code."
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
