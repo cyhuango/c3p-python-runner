@@ -4,7 +4,8 @@ info:
   description: API for executing base64-encoded Python code and accessing runner status.
   version: "1.0.0"
 servers:
-  - url: https://c3p-python-runner.onrender.com
+  - url: "https://c3p-python-runner.onrender.com"
+    description: "Main runner"
 
 paths:
   /run:
