@@ -65,4 +65,20 @@ def status():
 
 @app.route('/log', methods=['GET'])
 def log():
-    return jsonify({"log":
+    return jsonify({"log": log_list})
+
+# ✅ 新增這段：GPT Plugin 安裝入口
+@app.route('/.well-known/ai-plugin.json')
+def serve_ai_plugin():
+    return send_from_directory(
+        directory=os.path.join(app.root_path, '.well-known'),
+        filename='ai-plugin.json',
+        mimetype='application/json'
+    )
+
+@app.route('/', methods=['GET'])
+def home():
+    return "🟢 Python Runner API Online. Use POST /run with base64 Python code."
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=10000)
