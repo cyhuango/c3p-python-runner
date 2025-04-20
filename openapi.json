@@ -1,20 +1,19 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "LEAD ONE Python Runner API",
-    "description": "API for executing base64-encoded Python code and accessing runner status.",
+    "title": "LEAD ONE Plugin",
+    "description": "Execute base64 Python code and retrieve results",
     "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "https://c3p-python-runner.onrender.com",
-      "description": "Main production server"
+      "url": "https://c3p-python-runner.onrender.com"
     }
   ],
   "paths": {
     "/run": {
       "post": {
-        "summary": "Execute base64 Python code",
+        "summary": "Execute code",
         "requestBody": {
           "required": true,
           "content": {
@@ -23,8 +22,7 @@
                 "type": "object",
                 "properties": {
                   "code": {
-                    "type": "string",
-                    "description": "Base64-encoded Python code"
+                    "type": "string"
                   }
                 }
               }
@@ -33,37 +31,7 @@
         },
         "responses": {
           "200": {
-            "description": "Execution result"
-          }
-        }
-      }
-    },
-    "/status": {
-      "get": {
-        "summary": "Get the last execution status",
-        "responses": {
-          "200": {
-            "description": "Latest run result"
-          }
-        }
-      }
-    },
-    "/log": {
-      "get": {
-        "summary": "Retrieve recent execution logs",
-        "responses": {
-          "200": {
-            "description": "List of past execution results"
-          }
-        }
-      }
-    },
-    "/ping": {
-      "get": {
-        "summary": "Uptime ping",
-        "responses": {
-          "200": {
-            "description": "Server alive check"
+            "description": "Result"
           }
         }
       }
