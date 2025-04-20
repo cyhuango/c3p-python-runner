@@ -5,6 +5,7 @@ info:
   version: "1.0.0"
 servers:
   - url: https://c3p-python-runner.onrender.com
+
 paths:
   /run:
     post:
@@ -22,18 +23,21 @@ paths:
       responses:
         '200':
           description: Execution result
+
   /status:
     get:
       summary: Get the last execution status
       responses:
         '200':
           description: Latest run result
+
   /log:
     get:
       summary: Retrieve recent execution logs
       responses:
         '200':
           description: List of past execution results
+
   /ping:
     get:
       summary: Uptime ping
