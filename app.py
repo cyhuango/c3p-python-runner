@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_file
 import base64, traceback, time, os
 
 app = Flask(__name__)
@@ -73,7 +73,7 @@ def serve_openapi():
 # ✅ Plugin: legal.html
 @app.route('/legal.html')
 def serve_legal():
-    return send_from_directory(directory=os.path.dirname(os.path.abspath(__file__)), filename='legal.html')
+    return send_file('legal.html', mimetype='text/html')
 
 @app.route('/')
 def home(): return "🟢 Python Runner API Online. Use POST /run with base64 Python code."
