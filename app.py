@@ -70,11 +70,21 @@ def log():
 # ✅ 新增這段：GPT Plugin 安裝入口
 @app.route('/.well-known/ai-plugin.json')
 def serve_ai_plugin():
-    return send_from_directory(
-        directory=os.path.join(app.root_path, '.well-known'),
-        filename='ai-plugin.json',
-        mimetype='application/json'
-    )
+    return jsonify({
+        "schema_version": "v1",
+        "name_for_human": "LEAD ONE Python Runner",
+        "name_for_model": "lead_one_py_runner",
+        "description_for_human": "Execute secure Python code via API.",
+        "description_for_model": "Run base64 encoded Python code and retrieve results through the /run endpoint.",
+        "auth": { "type": "none" },
+        "api": {
+            "type": "openapi",
+            "url": "https://c3p-python-runner.onrender.com/openapi.yaml"
+        },
+        "logo_url": "https://c3p-python-runner.onrender.com/logo.png",
+        "contact_email": "cyhuango@gmail.com",
+        "legal_info_url": "https://c3p-python-runner.onrender.com/legal.html"
+    })
 
 @app.route('/', methods=['GET'])
 def home():
