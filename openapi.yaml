@@ -1,16 +1,15 @@
-openapi: 3.0.1
+openapi: 3.1.0
 info:
   title: LEAD ONE Python Runner API
-  description: API for executing base64-encoded Python code and accessing runner status.
+  description: Execute base64-encoded Python code and retrieve results
   version: "1.0.0"
 servers:
-  - url: "https://c3p-python-runner.onrender.com"
-    description: "Main runner"
-
+  - url: https://c3p-python-runner.onrender.com
 paths:
   /run:
     post:
       summary: Execute base64 Python code
+      operationId: executePythonCode
       requestBody:
         required: true
         content:
@@ -21,27 +20,29 @@ paths:
                 code:
                   type: string
                   description: Base64-encoded Python code
+              required:
+                - code
       responses:
-        '200':
+        "200":
           description: Execution result
-
   /status:
     get:
-      summary: Get the last execution status
+      summary: Get last execution status
+      operationId: getExecutionStatus
       responses:
-        '200':
+        "200":
           description: Latest run result
-
   /log:
     get:
-      summary: Retrieve recent execution logs
+      summary: Retrieve execution logs
+      operationId: getExecutionLog
       responses:
-        '200':
+        "200":
           description: List of past execution results
-
   /ping:
     get:
       summary: Uptime ping
+      operationId: pingRunner
       responses:
-        '200':
+        "200":
           description: Server alive check
