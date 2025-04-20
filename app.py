@@ -30,6 +30,10 @@ def run_code():
             'traceback': traceback.format_exc()
         }), 500
 
+@app.route('/ping', methods=['GET'])
+def ping():
+    return jsonify({'status': 'ok', 'message': 'Runner is awake.'})
+
 @app.route('/', methods=['GET'])
 def home():
     return "🟢 Python Runner API Online. Use POST /run with base64 Python code."
