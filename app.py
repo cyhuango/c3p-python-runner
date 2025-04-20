@@ -57,7 +57,7 @@ def serve_ai_plugin():
         "auth": { "type": "none" },
         "api": {
             "type": "openapi",
-            "url": "https://c3p-python-runner.onrender.com/openapi.yaml"
+            "url": "https://c3p-python-runner.onrender.com/openapi.json"
         },
         "logo_url": "https://c3p-python-runner.onrender.com/logo.png",
         "contact_email": "cyhuango@gmail.com",
@@ -69,6 +69,11 @@ def serve_ai_plugin():
 def serve_openapi():
     with open('openapi.yaml', 'r', encoding='utf-8') as f:
         return f.read(), 200, {'Content-Type': 'text/yaml'}
+
+# ✅ Plugin: openapi.json
+@app.route('/openapi.json')
+def serve_openapi_json():
+    return send_file('openapi.json', mimetype='application/json')
 
 # ✅ Plugin: legal.html
 @app.route('/legal.html')
