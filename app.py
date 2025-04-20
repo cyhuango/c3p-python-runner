@@ -86,6 +86,14 @@ def serve_ai_plugin():
         "legal_info_url": "https://c3p-python-runner.onrender.com/legal.html"
     })
 
+@app.route('/openapi.yaml')
+def serve_openapi():
+    return send_from_directory(
+        directory=os.path.dirname(os.path.abspath(__file__)),
+        filename='openapi.yaml',
+        mimetype='text/yaml'
+    )
+
 @app.route('/', methods=['GET'])
 def home():
     return "🟢 Python Runner API Online. Use POST /run with base64 Python code."
