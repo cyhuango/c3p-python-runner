@@ -88,11 +88,13 @@ def serve_ai_plugin():
 
 @app.route('/openapi.yaml')
 def serve_openapi():
-    return send_from_directory(
-        directory=os.path.dirname(os.path.abspath(__file__)),
-        filename='openapi.yaml',
-        mimetype='text/yaml'
-    )
+    try:
+        with open('openapi.yaml', 'r', encoding='utf-8') as f:
+            content = f.read()
+        return content, 200, {'Content-Type': 'text/yaml'}
+    except Exception as e:
+        return f"Error reading openapi.yaml: {str(e)}", 500
+
 
 @app.route('/', methods=['GET'])
 def home():
