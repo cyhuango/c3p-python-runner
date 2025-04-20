@@ -15,9 +15,15 @@ def run_code():
         code_bytes = base64.b64decode(code_b64)
         code = code_bytes.decode('utf-8')
 
+        # 建立安全全域變數環境（加入 random）
+        safe_globals = {
+            "__builtins__": __builtins__,
+            "random": __import__('random')
+        }
+
         # 建立一個局部變數空間
         local_vars = {}
-        exec(code, {}, local_vars)
+        exec(code, safe_globals, local_vars)
 
         # 回傳 result，如果有的話
         if 'result' in local_vars:
@@ -40,3 +46,4 @@ def home():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
+
