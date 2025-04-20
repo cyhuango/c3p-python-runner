@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, send_file
-import base64, traceback, time, os
+import base64, traceback, time, os, json
 
 app = Flask(__name__)
 
@@ -58,7 +58,9 @@ def serve_openapi():
 
 @app.route('/openapi.json')
 def serve_openapi_json():
-    return send_file('openapi.json', mimetype='application/json')
+    with open('openapi.json', 'r') as f:
+        data = json.load(f)
+    return jsonify(data)
 
 @app.route('/legal.html')
 def serve_legal():
