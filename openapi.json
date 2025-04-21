@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "LEAD ONE Python Runner API",
-    "description": "Execute base64-encoded Python code and retrieve results",
-    "version": "1.0.0"
+    "description": "Execute base64-encoded Python code and retrieve results (supporting extended task formats)",
+    "version": "1.1.0"
   },
   "servers": [
     {
@@ -13,7 +13,7 @@
   "paths": {
     "/run": {
       "post": {
-        "summary": "Execute base64 Python code",
+        "summary": "Execute base64 Python code with optional task metadata",
         "operationId": "executePythonCode",
         "requestBody": {
           "required": true,
@@ -25,6 +25,18 @@
                   "code": {
                     "type": "string",
                     "description": "Base64-encoded Python code"
+                  },
+                  "task": {
+                    "type": "string",
+                    "description": "Optional task name or task ID"
+                  },
+                  "input": {
+                    "type": "object",
+                    "description": "Optional input parameters used by the code"
+                  },
+                  "meta": {
+                    "type": "object",
+                    "description": "Optional metadata (e.g., user info, context)"
                   }
                 },
                 "required": ["code"]
@@ -34,7 +46,31 @@
         },
         "responses": {
           "200": {
-            "description": "Execution result"
+            "description": "Successful execution",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "description": "Execution output or printed result",
+                      "oneOf": [
+                        { "type": "string" },
+                        { "type": "number" },
+                        { "type": "object" },
+                        { "type": "array" }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body (e.g., base64 decode error)"
+          },
+          "500": {
+            "description": "Execution error or crash"
           }
         }
       }
@@ -67,7 +103,7 @@
         "operationId": "pingRunner",
         "responses": {
           "200": {
-            "description": "Server alive check"
+            "description": "Runner is online"
           }
         }
       }
