@@ -1,0 +1,32 @@
+{
+  "runner_id": "LEAD_ONE_RUNNER_v1.0",
+  "version": "2025-04-21",
+  "input_format": "base64_encoded_utf8_string",
+  "exec_environment": [
+    "__builtins__",
+    "random",
+    "math",
+    "datetime",
+    "statistics",
+    "decimal",
+    "time",
+    "json"
+  ],
+  "output_policy": {
+    "result_key": true,
+    "allow_stdout_capture": true,
+    "return_type": ["str", "int", "float", "list", "dict"],
+    "fallback_to_str": true
+  },
+  "encoding": "utf-8",
+  "auto_format": {
+    "time_string": "f\"{h:02d}:{m:02d}\"",
+    "angle_precision": 0.01,
+    "default_output": "done"
+  },
+  "error_policy": {
+    "traceback_on_failure": true,
+    "wrap_as": ["error", "traceback"],
+    "max_log_length": 100
+  }
+}
