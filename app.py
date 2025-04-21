@@ -12,6 +12,14 @@ def format_time(h, m, pad=True):
     else:
         return "{}:{}".format(h, m)
 
+# ✅ JSON 安全輸出過濾（保證 serializable）
+def make_json_safe(val):
+    try:
+        json.dumps(val)
+        return val
+    except TypeError:
+        return str(val)
+
 # 記憶狀態
 last_status = {"code": None, "result": None, "error": None, "timestamp": None}
 log_list = []
@@ -20,8 +28,15 @@ log_list = []
 def run_code():
     global last_status, log_list
     try:
-        code_b64 = request.get_json().get('code')
-        code = base64.b64decode(code_b64).decode('utf-8')
+        # ⛑ 解碼前防錯
+        try:
+            code_b64 = request.get_json().get('code')
+            code = base64.b64decode(code_b64).decode('utf-8')
+        except Exception as decode_err:
+            return jsonify({
+                "error": "Invalid base64 or UTF-8 decoding",
+                "traceback": traceback.format_exc()
+            }), 400
 
         # 安全執行環境
         safe_env = {
@@ -33,7 +48,7 @@ def run_code():
             "decimal": __import__('decimal'),
             "time": __import__('time'),
             "json": __import__('json'),
-            "format_time": format_time  # ✅ 注入時間格式工具
+            "format_time": format_time
         }
 
         # 捕捉 print 輸出
@@ -48,14 +63,13 @@ def run_code():
         sys.stdout = sys_stdout_backup
         printed_output = stdout_capture.getvalue().strip()
 
-        # 優先使用 result，否則用 print 輸出
+        # 優先 result，其次印出
         result = safe_env.get('result', None)
         if result is None and printed_output:
             result = printed_output
         elif not isinstance(result, (str, int, float, list, dict)):
-            result = str(result)  # ⛑ 防崩潰轉型
+            result = make_json_safe(result)
 
-        # 紀錄狀態
         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
         last_status = {
             "code": code,
@@ -96,7 +110,12 @@ def log():
 
 @app.route('/ping')
 def ping():
-    return jsonify({"status": "ok", "message": "Runner is awake."})
+    return jsonify({
+        "status": "ok",
+        "message": "Runner is awake.",
+        "version": "LEAD_ONE_RUNNER v1.1",
+        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
+    })
 
 @app.route('/.well-known/ai-plugin.json')
 def serve_ai_plugin():
