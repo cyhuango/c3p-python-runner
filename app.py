@@ -5,6 +5,13 @@ import sys
 
 app = Flask(__name__)
 
+# ✅ 格式化時間字串工具
+def format_time(h, m, pad=True):
+    if pad:
+        return "{:02d}:{:02d}".format(h, m)
+    else:
+        return "{}:{}".format(h, m)
+
 # 記憶狀態
 last_status = {"code": None, "result": None, "error": None, "timestamp": None}
 log_list = []
@@ -25,7 +32,8 @@ def run_code():
             "statistics": __import__('statistics'),
             "decimal": __import__('decimal'),
             "time": __import__('time'),
-            "json": __import__('json')
+            "json": __import__('json'),
+            "format_time": format_time  # ✅ 注入時間格式工具
         }
 
         # 捕捉 print 輸出
