@@ -13,7 +13,6 @@ log_list = []
 def run_code():
     global last_status, log_list
     try:
-        # 解碼 base64 code
         code_b64 = request.get_json().get('code')
         code = base64.b64decode(code_b64).decode('utf-8')
 
@@ -26,7 +25,7 @@ def run_code():
             "statistics": __import__('statistics'),
             "decimal": __import__('decimal'),
             "time": __import__('time'),
-            "json": __import__('json'),
+            "json": __import__('json')
         }
 
         # 捕捉 print 輸出
@@ -41,26 +40,39 @@ def run_code():
         sys.stdout = sys_stdout_backup
         printed_output = stdout_capture.getvalue().strip()
 
-        # 取 result 或 print 輸出
+        # 優先使用 result，否則用 print 輸出
         result = safe_env.get('result', None)
         if result is None and printed_output:
             result = printed_output
         elif not isinstance(result, (str, int, float, list, dict)):
-            result = str(result)
+            result = str(result)  # ⛑ 防崩潰轉型
 
-        # 狀態記錄
+        # 紀錄狀態
         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
-        last_status = {"code": code, "result": result, "error": None, "timestamp": timestamp}
+        last_status = {
+            "code": code,
+            "result": result,
+            "error": None,
+            "timestamp": timestamp
+        }
         log_list.append(last_status)
         if len(log_list) > 100:
             log_list.pop(0)
 
-        return jsonify({'result': result})
+        return jsonify({"result": result})
 
     except Exception as e:
-        err = {"error": str(e), "traceback": traceback.format_exc()}
+        err = {
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }
         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
-        last_status = {"code": code if 'code' in locals() else None, "result": None, "error": err, "timestamp": timestamp}
+        last_status = {
+            "code": code if 'code' in locals() else None,
+            "result": None,
+            "error": err,
+            "timestamp": timestamp
+        }
         log_list.append(last_status)
         if len(log_list) > 100:
             log_list.pop(0)
