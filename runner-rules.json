@@ -20,10 +20,11 @@
   },
   "encoding": "utf-8",
   "auto_format": {
-    "time_string": "f\"{h:02d}:{m:02d}\"",
+  "time_string": "format_time(h, m, pad=True)",
     "angle_precision": 0.01,
     "default_output": "done"
   },
+
   "error_policy": {
     "traceback_on_failure": true,
     "wrap_as": ["error", "traceback"],
